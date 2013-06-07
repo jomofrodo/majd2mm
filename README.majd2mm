@@ -1,8 +1,28 @@
+majd2mm 0.1
 
+So, you are still running that majordomo server but the system upgrades are getting tougher and tougher to deal with.
+
+This script retrofits a standard GNU Mailman machine to process majordomo email commands.
+
+For instance:  
+
+Do you send email to majordomo@foo.bar with commands like the following?
+
+	approve some.password subscribe some_list somebody@or.other
+
+	unsubscribe * foo@bar.com
+
+These are nice little commands, and one of the things we always loved about Majordomo.
+
+With majd2mm hooked up as the procmail handler for the majordomo user on your Mailman box, these commands are returned
+to service. More or less.
+
+
+INSTALLATION HINTS:
 
 1. Create a majordomo user.
 
-Your majordomo user must be in the mailman group.  Best way to do this, set your majordomo group in etc/passwd.
+Your majordomo user must be in the mailman group.  Best way to do this: set your majordomo group in etc/passwd.
 
 e.g.,
 
@@ -23,4 +43,9 @@ my $LOG_FILE="/var/log/majd2mm.log";
 
 Make sure the log file, wherever you decided to put it, is writeable by the 'majordomo' user.
 
-4.  mv procmailrc.majd2mm  into ~majordomo/.procmailrc
+4.  Move procmailrc.majd2mm  into ~majordomo/.procmailrc
+Make sure the local MTA is hooked up to use procmail. 
+
+For instance, on postfix you want a line like the following in main.cf:
+
+	mailbox_command = /usr/bin/procmail -a "$EXTENSION"  DEFAULT=$HOME/Maildir/
