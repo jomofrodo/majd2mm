@@ -1,0 +1,33 @@
+# PROCMAILRC Scripts
+# These scripts route mail into appropriate mailboxes
+# based on values in the mail headers, etc.
+   PATH=/bin:/usr/bin:/usr/bin
+   MAILDIR=$HOME/Maildir/     #you'd better make sure it exists
+   DEFAULT=$MAILDIR
+   CURMONTH=`date +%Y%b`
+   LOGFILE=$HOME/procmail/$CURMONTH.log
+   VERBOSE=OFF
+
+###### From approved
+:0fw
+* ^From:.*(list|of|authorized|users|goes|here)
+#| /usr/local/majordomo/wrapper majordomo 
+| /home/majordomo/bin/majd2mm.pl
+
+
+:0fw
+* ^Subject:.*(Subscribe|subscription)
+| /home/majordomo/bin/majd2mm.pl
+
+:0fw
+* ^Subject:.*(unsub|Unsub)
+| /home/majordomo/bin/majd2mm.pl
+
+##### Otherwise goodbye
+#:0
+#   /dev/null
+
+############### Deliver to Maildir
+### Or deliver
+:0
+	$MAILDIR

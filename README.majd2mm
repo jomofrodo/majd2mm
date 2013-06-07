@@ -1,0 +1,26 @@
+
+
+1. Create a majordomo user.
+
+Your majordomo user must be in the mailman group.  Best way to do this, set your majordomo group in etc/passwd.
+
+e.g.,
+
+mailman:x:41:41:GNU Mailing List Manager:/usr/lib/mailman:/sbin/nologin
+majordomo:x:503:41::/home/majordomo:/sbin/nologin
+
+
+2.  Put majd2mm.pl in ~majordomo/bin
+
+
+3.  Set the application variables in the script file.
+
+#************* SET THESE VALUES **************
+my $MM_BIN="/usr/lib/mailman/bin";
+my $MEMBERS_FILE="./members.txt";
+my $LOG_FILE="/var/log/majd2mm.log";
+#********************************************
+
+Make sure the log file, wherever you decided to put it, is writeable by the 'majordomo' user.
+
+4.  mv procmailrc.majd2mm  into ~majordomo/.procmailrc
