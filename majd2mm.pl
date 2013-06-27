@@ -14,11 +14,13 @@ my $cmdUnsub = "http://[domain.name]/mailman/options/[listname]/[user_email_addr
 
 my $cmdMM;
 my $logMsg;
+my $flgUnsub = 0;
 
 
 #************* SET THESE VALUES **************
 my $MM_BIN="/usr/lib/mailman/bin";
 my $MEMBERS_FILE="./members.txt";
+my $LIST="ccb_genrl";
 my $LOG_FILE="/var/log/majd2mm.log";
 #********************************************
 
@@ -33,11 +35,11 @@ sub processCmd($){
 
 
 	if($cmd1 =~ /approve.*/){
-		$cmd1 =~ /approve\s+([\w|\.]+)\s+([\w]+)\s+([\w|_]+)\s+(.*)/;
+		$cmd1 =~ /approve\s+([\w|\.]+)\s+([\w]+)\s+([\w|_|@|\.]+)\s+(.*)/;
 		$passwd = $1;
 		$cmdVerb = $2;
-		$list = $3;
-		$email = $4;
+		$email = $3;
+		$list = $4;
 	}
 	elsif($cmd1 =~ /unsubscribe\s+([\w|_|\*]+)\s+(.*)/){
 		#$cmd1 =~ /unsubscribe\s+([\w|_|\*]+)\s+([\w|@|_|\.|\*]+)/;
@@ -81,7 +83,7 @@ sub processCmd($){
 	if($cmdVerb eq "subscribe"){
 	
 		# just run the add_members command
-		$cmd = "$MM_BIN/add_members -r $MEMBERS_FILE ";
+		$cmd = "$MM_BIN/add_members -r $MEMBERS_FILE $LIST";
 		$cmd .=" -w y -a n";
 		$cmd .= " $list";
 		$ret = `$cmd`;
@@ -116,7 +118,7 @@ sub processCmd($){
 
 while (<STDIN>){
 
-	if(0){print($_);}
+	if(1){print($_);}
 	$email_body .= $_;
 	$line = $_;
 	if(! $line){ next;}
@@ -135,14 +137,35 @@ while (<STDIN>){
 		processCmd($cmd);
 		next;
 	}
-	if($line=~/Subject:.*unsub/){
-		$cmd = "approve ccb.passwd unsubsribe $from *";
-		processCmd($cmd);
+	if($line=~/Subject:.*(unsub|remove)/i){
+		$flgUnsub = 1;
+
+		#Have to process this command outside the main loop as we can't be sure
+		#the subject line will follow the From line
+
+		#$cmd = "approve ccb.passwd unsubscribe $from *";
+		#processCmd($cmd);
+		next;
+	}
+	if(/^end$/){ 
+		## How do we do a last?
+		while(<STDIN>){
+			if(0){print($_);}
+		}
 		next;
 	}
 	next;
 	
 }	
+
+if($flgUnsub && $from){
+# Special purpose -- process a user submitted remove or unsub command
+		$cmd = "approve ccb.passwd unsubscribe $from *";
+		processCmd($cmd);
+		$flgUnsub = 0;
+}
+
+
 
 sub writeLog{
 # write anything out to a log file

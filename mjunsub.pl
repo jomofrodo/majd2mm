@@ -24,7 +24,7 @@ my $local_adm	= 'mailadmin@netazoic.com';
 my $logerr	= "/var/log/majordomo.log";
 my $logfile	= "/var/log/majordomo.log";
 my $list	= 'ccb';
-my $majordomo	= 'majordomo@linus.claresco.hq';  
+my $majordomo	= 'majordomo@linus.netazoic.com';  
 my $subject 	= "Unsub Request for ";
 my $cmd		= "unsubscribe * ";
 ## my $majordomo = 'majordomo@netazoic.com';
@@ -59,13 +59,9 @@ while (<STDIN>){
 		next;
 	}
 	## Check for forwarded email or requesting email address
-	if (/^\s*From:.*[\s:\<]\s*([\w\.]+@[\w\.]+)/){
-		if(!$flgFrom){$flgFrom =1;$from1 = $1;next;}
-		else{
-			if(0){ print("From: $1");}
-			$unsub_email = $1;
-			last;
-		}
+	if (/^\s*?From:.*[\s:\<]\s*([\w\.]+@[\w\.]+)/){
+		$unsub_email =$1;
+		next;
 	}
 }
 
