@@ -84,7 +84,7 @@ sub processCmd($){
 	if($cmdVerb eq "subscribe"){
 	
 		# just run the add_members command
-		$cmd = "$MM_BIN/add_members -r $MEMBERS_FILE $LIST";
+		$cmd = "$MM_BIN/add_members -r $MEMBERS_FILE ";
 		$cmd .=" -w y -a n";
 		$cmd .= " $list";
 		$ret = `$cmd`;
@@ -128,12 +128,12 @@ while (<STDIN>){
 	if ($line=~/^\s*From:.*[\s:\<]\s*([\w\.]+@[\w\.]+)/){
 		$from = $1;next;
 	}
-	if($line=~/^\s+?approve.*/){
+	if($line=~/^\s*?approve.*/){
 		$cmd = $line;
 		processCmd($cmd);
 		next;
 	}
-	if($line=~/^\s+?unsubscribe.*/){
+	if($line=~/^\s*?unsubscribe.*/){
 		$cmd = $line;
 		processCmd($cmd);
 		next;
