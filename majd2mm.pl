@@ -34,14 +34,14 @@ sub processCmd($){
 	chomp($cmd1);
 
 
-	if($cmd1 =~ /approve.*/){
-		$cmd1 =~ /approve\s+([\w|\.]+)\s+([\w]+)\s+([\w|_|@|\.]+)\s+(.*)/;
+	if($cmd1 =~ /^approve.*/){
+		$cmd1 =~ /approve\s+([\w|\.]+)\s+([\w]+)\s+([\w|_|\.|\*]+)\s+([\w|_|@|\.]+)/;
 		$passwd = $1;
 		$cmdVerb = $2;
-		$email = $3;
-		$list = $4;
+		$list = $3;
+		$email = $4;
 	}
-	elsif($cmd1 =~ /unsubscribe\s+([\w|_|\*]+)\s+(.*)/){
+	elsif($cmd1 =~ /^unsubscribe\s+([\w|_|\*]+)\s+(.*)/){
 		#$cmd1 =~ /unsubscribe\s+([\w|_|\*]+)\s+([\w|@|_|\.|\*]+)/;
 		$cmdVerb = "unsubscribe";
 		$list = $1;
@@ -50,6 +50,7 @@ sub processCmd($){
 	else{
 		$cmdVerb = "ERROR";
 		$logMsg = "problem processing: $cmd1";
+		return;
 	}
 
 
@@ -127,12 +128,12 @@ while (<STDIN>){
 	if ($line=~/^\s*From:.*[\s:\<]\s*([\w\.]+@[\w\.]+)/){
 		$from = $1;next;
 	}
-	if($line=~/approve.*/){
+	if($line=~/^\s+?approve.*/){
 		$cmd = $line;
 		processCmd($cmd);
 		next;
 	}
-	if($line=~/unsubscribe.*/){
+	if($line=~/^\s+?unsubscribe.*/){
 		$cmd = $line;
 		processCmd($cmd);
 		next;
@@ -143,7 +144,7 @@ while (<STDIN>){
 		#Have to process this command outside the main loop as we can't be sure
 		#the subject line will follow the From line
 
-		#$cmd = "approve ccb.passwd unsubscribe $from *";
+		#$cmd = "approve ccb.passwd unsubscribe * $from";
 		#processCmd($cmd);
 		next;
 	}
@@ -160,7 +161,7 @@ while (<STDIN>){
 
 if($flgUnsub && $from){
 # Special purpose -- process a user submitted remove or unsub command
-		$cmd = "approve ccb.passwd unsubscribe $from *";
+		$cmd = "approve ccb.passwd unsubscribe * $from";
 		processCmd($cmd);
 		$flgUnsub = 0;
 }
