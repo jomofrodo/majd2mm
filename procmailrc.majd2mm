@@ -7,27 +7,46 @@
    CURMONTH=`date +%Y%b`
    LOGFILE=$HOME/procmail/$CURMONTH.log
    VERBOSE=OFF
+   BACKUP=$DEFAULTbackup
+#
+##### Backup mail for a little while
+#:0c
+#   $BACKUP
 
 ###### From approved
-:0fw
-* ^From:.*(list|of|authorized|users|goes|here)
-#| /usr/local/majordomo/wrapper majordomo 
-| /home/majordomo/bin/majd2mm.pl
+#:0fw
+#* ^From:.*(mailadmin|root)
+#| /usr/local/fbr.mailadmin/wrapper majordomo 
+#| /usr/bin/id -un > /tmp/procmailuser
+#| /home/fbr.mailadmin/bin/majd2mm.pl
 
 
 :0fw
 * ^Subject:.*(Subscribe|subscription)
-| /home/majordomo/bin/majd2mm.pl
+| /home/fbr.mailadmin/bin/majd2mm.pl
 
 :0fw
-* ^Subject:.*(unsub|Unsub)
-| /home/majordomo/bin/majd2mm.pl
+* ^Subject:.*(unsub|Unsub|UNSUB|remove|Remove|REMOVE).*
+#| /usr/bin/id -un > /tmp/procmailuser
+| /home/fbr.mailadmin/bin/majd2mm.pl
+
+:0 B
+* ^[ 	]*(remove|Remove|REMOVE)[ 	]*$
+| /home/fbr.mailadmin/bin/majd2mm.pl
+
+:0fw
+* ^Subject:.*Forward of moderated
+| /home/fbr.mailadmin/bin/majd2mm.pl
+
+:0fw
+* ^Subject:.*(Re|RE): FBR:
+! info@freeburmarangers.org
 
 ##### Otherwise goodbye
 #:0
 #   /dev/null
 
 ############### Deliver to Maildir
-### Or deliver
+### Won't happen
 :0
 	$MAILDIR

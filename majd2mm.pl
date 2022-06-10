@@ -148,6 +148,10 @@ while (<STDIN>){
 		#processCmd($cmd);
 		next;
 	}
+	if($line=~/^\s*remove\s*/i){
+		$flgUnsub=1;
+		next;
+	}
 	if(/^end$/){ 
 		## How do we do a last?
 		while(<STDIN>){
@@ -175,6 +179,8 @@ sub writeLog{
 	if($logtext!~/.*\n$/){
 		$logtext .= "\n";
 	}
+	my $time = localtime;
+	$logtext = $time . " " . $logtext;
         open (FH,">>$logfile");
         print FH $logtext;
         close FH;
