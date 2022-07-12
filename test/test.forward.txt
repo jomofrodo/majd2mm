@@ -1,0 +1,64 @@
+From fbr_mailadmin-bounces@freeburmarangers.org Fri Jul  5 08:08:33 2013
+Return-Path: <fbr_mailadmin-bounces@freeburmarangers.org>
+X-Original-To: fbr.mailadmin
+Delivered-To: fbr.mailadmin@linus.netazoic.com
+Received: from linus.netazoic.com (localhost [127.0.0.1])
+        by linus.netazoic.com (Postfix) with ESMTP id 2C51921B1B
+        for <fbr.mailadmin>; Fri,  5 Jul 2013 08:08:33 -0700 (PDT)
+Subject: Forward of moderated message
+From: fbr_mailadmin-bounces@freeburmarangers.org
+To: fbr.mailadmin@linus.netazoic.com
+MIME-Version: 1.0
+Content-Type: message/rfc822
+Message-ID: <mailman.0.1373036910.5814.fbr_mailadmin@freeburmarangers.org>
+Date: Fri, 05 Jul 2013 08:08:30 -0700
+Precedence: bulk
+X-BeenThere: fbr_mailadmin@freeburmarangers.org
+X-Mailman-Version: 2.1.12
+List-Id: <fbr_mailadmin.freeburmarangers.org>
+X-List-Administrivia: yes
+Sender: fbr_mailadmin-bounces@freeburmarangers.org
+Errors-To: fbr_mailadmin-bounces@freeburmarangers.org
+Status: RO
+Content-Length: 1997
+
+Return-Path: <seyalater052@gmail.com>
+X-Original-To: mailadmin@freeburmarangers.org
+Delivered-To: fbr_mailadmin@linus.netazoic.com
+Received: from mail-ob0-f178.google.com (mail-ob0-f178.google.com [209.85.214.178])
+        by linus.netazoic.com (Postfix) with ESMTP id 61C5B22078
+        for <mailadmin@freeburmarangers.org>; Wed,  3 Jul 2013 09:08:44 -0700 (PDT)
+Received: by mail-ob0-f178.google.com with SMTP id fb19so347519obc.37
+        for <mailadmin@freeburmarangers.org>; Wed, 03 Jul 2013 09:08:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20120113;
+        h=subject:from:content-type:x-mailer:message-id:date:to
+         :content-transfer-encoding:mime-version;
+        bh=4ht9G50SlYlr7BPTCuy+KjNotHQlLEXbSKghIYlF3TI=;
+        b=YGLyg4MQIo5tdEb2hcf49fr7JmDGh7fXFZ5XOWjZb4o533Ja4oQyZ6mIa2vlDxGYpc
+         AOLzhtZ4yDqClV3/jHU88EgSp9xUNBTrgcOJHjdx8QeJ6U2bnMtG4TwkQRRAEmVL6amd
+         BcgbzfcX0QtFlAtkj5RO2uDqXl7ihYAQBg8SXnNF5LUjsXjDUnl0stLNgBNS/LdFk6VB
+         eXLedQsz/+KvR7gbrvPS6TxpQTQ0HriQv0an0KmtjUX9qUQM2Ng9Z3YBYSKLUjl+wak/
+         ooYl/MInl2Bjr4tzm5zm6AS3jXgg6eKJC4EQPBkzqbidNjJpne0h6xFQmrsxHCT+I/0Y
+         x43w==
+X-Received: by 10.182.102.234 with SMTP id fr10mr1393365obb.85.1372867723095;
+        Wed, 03 Jul 2013 09:08:43 -0700 (PDT)
+Received: from [192.168.1.68] (75-1-178-141.lightspeed.snantx.sbcglobal.net. [75.1.178.141])
+        by mx.google.com with ESMTPSA id rs1sm11940565obb.12.2013.07.03.09.08.41
+        for <mailadmin@freeburmarangers.org>
+        (version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+        Wed, 03 Jul 2013 09:08:42 -0700 (PDT)
+Subject: Remove
+From: Seya Later <seyalater052@gmail.com>
+Content-Type: text/plain;
+        charset=us-ascii
+X-Mailer: iPhone Mail (10A523)
+Message-Id: <B587653D-B416-49A2-A6C8-07DB9FE238F6@gmail.com>
+Date: Wed, 3 Jul 2013 11:08:41 -0500
+To: "mailadmin@freeburmarangers.org" <mailadmin@freeburmarangers.org>
+Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (1.0)
+
+
+
+Sent from my iPhone
