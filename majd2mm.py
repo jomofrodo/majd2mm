@@ -13,12 +13,10 @@ majd2mm.majd2mm is a conversion of the majd2mm.pl perl script,
 import os
 import re
 import subprocess
-from pip._internal.utils.logging import subprocess_logger
 import time
 import sys
-from distutils import command
-from pip._vendor.pyparsing.util import line
-import cmd
+
+
 
 email_body = "";
 cmd = "";
@@ -29,7 +27,7 @@ fromAddr = "";
 cmdMM = "";
 logMsg = "";
 flgUnsub = 0;
-flgDebug = 0;
+flgDebug = 1;
 
 #************* SET THESE VALUES **************
 MM_BIN = "/usr/lib/mailman/bin";
