@@ -1,14 +1,12 @@
 #!/usr/bin/python
 '''
-Created on Jul 11, 2022
+Created on Jul 17, 2022
 
 @author: John Moore,  jmoore@netazoic.com
 
-majd2mm.majd2mm -- Add majordomo style email processing to the mailman system
+majd2mm.mjdpublish -- Publish majordomo style email processing commands to the mqtt pubsub queue
 
-majd2mm.majd2mm is a conversion of the majd2mm.pl perl script, 
-             the purpose of which is to convert majordomo email commands to mailman email commands
-             Primarily used for unsubscribe
+Currently, supports subscribe (to a list) and unsubscribe (from a  list)
 '''
 
 import os
@@ -18,6 +16,7 @@ import time
 import sys
 import datetime
 import pwd
+import paho.mqtt.client as mqtt
 
 #import pdb
 #pdb.set_trace()
@@ -27,31 +26,23 @@ cmd = "";
 domainName = "mm2.freeburmarangers.org";
 line = "";
 fromAddr = "";
+broker_url="localhost"
+broker_port = 1883
 
 cmdMM = "";
 logMsg = "";
 flgUnsub = 0;
 flgDebug = 0;
 
+client = mqtt.Client()
+client.connect(broker_url,broker_port);
 
 #************* SET THESE VALUES **************
-MM_BIN = "/usr/lib/mailman/bin";
-MEMBERS_FILE = "./members.txt";
 LIST = "ccb_genrl";
 LOG_FILE = "/var/log/majd2mm.log";
 TEST_FILE = "./test/test.forward.txt"
 user_name = "fbr.mailadmin"
 #********************************************
-binFileExists = os.path.isdir(MM_BIN)
-if(not binFileExists):
-     if(not flgDebug): 
-         exit("The mailman bin directory not located. Please edit settings.");
-         
-pw_record = pwd.getpwnam(user_name)
-user_name      = pw_record.pw_name
-user_home_dir  = pw_record.pw_dir
-user_uid       = pw_record.pw_uid
-user_gid       = pw_record.pw_gid
 
 def writeLog(logfile, logtext):
 # write anything out to a log file
@@ -66,16 +57,8 @@ def writeLog(logfile, logtext):
     f.close();
 
 
-def writeMembers(members):
-    memfile = MEMBERS_FILE;
-    f = open(memfile)
-    # zero it out
-    f.delete();    
-    f.write(members);
-    f.close();
-
-
-def processCmd(cmd):
+def publishCmd(cmd):
+ # Publish a mosquitto command to subscribe or unsubscribe
     lists = []
 
     if(re.search("^approve.*", cmd)):
@@ -85,6 +68,9 @@ def processCmd(cmd):
         cmdVerb = m.group(2);
         listName = m.group(3);
         email = m.group(4);
+	payload = '{"listName":%s,"email":%s}'%(listName,email)
+	client.publish(topic="SubscribeList", 
+		payload=payload )
 
     elif(re.search("^unsubscribe.*", cmd)):
         regex = "^unsubscribe\s+([\w|_|\*|\|]+)\s+(.*)"
@@ -92,61 +78,18 @@ def processCmd(cmd):
         cmdVerb = "unsubscribe";
         listName = m.group(1);
         email = m.group(2);
+	payload = '{"listName":"%s","email":"%s"}'% (listName,email)
+	
+	client.publish(topic="UnsubList", payload=payload)
 
     else:
         cmdVerb = "ERROR";
         logMsg = "problem processing: " + cmd;
         return;
 
-    # Just run commands directly
     
-    if(cmdVerb == "subscribe"):
-        # just run the add_members command
-        # cmd = " %s/add_members -r %s " %(MM_BIN,MEMBERS_FILE);
-        cmd = " %s/sub " % (MM_BIN);
-        cmd += " -w y -a n ";
-        cmd += listName + " " + email
-	try:
-            ret = subprocess.check_output([cmd,'-w y', '-a n', listname, email])
-            logMsg = listName + ": " + ret
-	    next
-        except subprocess.CalledProcessError:
-            logMsg = "Error while trying to subscribe %s to %s\n" % (email, listName);
-            logMsg += ret;
-            
-    elif(cmdVerb == "unsubscribe"):
-        email = email.replace("\*", "");  # remove wildcards in the email address
-        cmd = "%s/remove_members " % MM_BIN;
-        if(listName == "*"):
-            cmd += " --fromall";
-            lists = [listName]
-        else:
-            if(re.match(".*\|", listName)):
-                lists = listName.split("|")
-            else:
-                lists = [listName]
-        for ln in lists:
-	    result = ""
-            cmd1 = cmd;
-            cmd1 += ln + " "
-            cmd1 += email
-	    try:
-		result = subprocess.check_output(cmd1.split(" "), preexec_fn=demote(user_uid, user_gid))
-                logMsg = "Unsubscribed %s from %s" % (email, ln)
-		next
-	    except subprocess.CalledProcessError:
-                logMsg = "Error while trying to unsubscribe %s from %s\n" % (email, ln);
-                logMsg += "%s \n" % result 
-        
-            writeLog(LOG_FILE, logMsg);
+    ### End of publishCmd
     
-    ### End of processCmd
-    
-def demote(user_uid, user_gid):
-   def result():
-     os.setgid(user_gid)
-     os.setuid(user_uid)
-   return result
     
 ## Process the FILE (email)
 
@@ -170,7 +113,7 @@ for line in sys.stdin:
     m = re.search("^\s*?(approve|unsubscribe).*", line)
     if(m):
         cmd = line
-        processCmd(cmd)
+        publishCmd(cmd)
         continue
 
     # check for an unsubscribe in email
@@ -199,6 +142,6 @@ for line in sys.stdin:
 if(flgUnsub and not fromAddr.isspace()):
 # Special purpose -- process a user submitted remove or unsub command
         cmd = "unsubscribe ccb_genrl|ccb_specl|ccb_prayer %s" % fromAddr;
-        processCmd(cmd);
+        publishCmd(cmd);
         flgUnsub = 0;
 
