@@ -40,7 +40,7 @@ client.connect(broker_url,broker_port);
 #************* SET THESE VALUES **************
 LIST = "ccb_genrl";
 LOG_FILE = "/var/log/majd2mm.log";
-TEST_FILE = "./test/test.forward.txt"
+TEST_FILE = "/home/fbr.mailadmin/bin/test/test.subscribe.txt"
 user_name = "fbr.mailadmin"
 #********************************************
 
@@ -68,9 +68,9 @@ def publishCmd(cmd):
         cmdVerb = m.group(2);
         listName = m.group(3);
         email = m.group(4);
-	payload = '{"listName":%s,"email":%s}'%(listName,email)
+	payload = '{"listName":"%s","email":"%s"}'%(listName,email)
 	client.publish(topic="SubscribeList", 
-		payload=payload )
+		payload=payload, qos=1 )
 
     elif(re.search("^unsubscribe.*", cmd)):
         regex = "^unsubscribe\s+([\w|_|\*|\|]+)\s+(.*)"
@@ -80,7 +80,7 @@ def publishCmd(cmd):
         email = m.group(2);
 	payload = '{"listName":"%s","email":"%s"}'% (listName,email)
 	
-	client.publish(topic="UnsubList", payload=payload)
+	client.publish(topic="UnsubList", payload=payload, qos=1)
 
     else:
         cmdVerb = "ERROR";
@@ -99,10 +99,9 @@ if(flgDebug):
 else:
     inputFile = sys.stdin
     
+## Debugging use inputfile
 #for line in open(inputFile):
 for line in sys.stdin:
-    if(True): 
-        print(line)
     email_body += line
     line = line.rstrip();
     m = re.search("^\s*From:.*[\s:\<]\s*([\w\.]+@[\w\.]+)", line)
@@ -114,7 +113,7 @@ for line in sys.stdin:
     if(m):
         cmd = line
         publishCmd(cmd)
-        continue
+        exit()
 
     # check for an unsubscribe in email
     m = re.search("^\s*?Subject:.*(unsub|remove)", line, re.IGNORECASE)

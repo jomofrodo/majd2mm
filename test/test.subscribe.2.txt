@@ -1,0 +1,23 @@
+Return-Path: <mailadmin@freeburmarangers.org>
+X-Original-To: jmoore@netazoic.com
+Delivered-To: jmoore@netazoic.com
+Received-SPF: Pass (mailfrom) identity=mailfrom; client-ip=65.19.140.2; helo=helium.he.net; envelope-from=mailadmin@freeburmarangers.org; receiver=<UNKNOWN> 
+DKIM-Filter: OpenDKIM Filter v2.11.0 linus2.netazoic.com 13CEF40154
+Received: from helium.he.net (helium.he.net [65.19.140.2])
+	by linus2.netazoic.com (Postfix) with ESMTPS id 13CEF40154
+	for <jmoore@netazoic.com>; Sat, 30 Jul 2022 23:22:52 +0000 (UTC)
+Received: from helium.he.net (localhost [127.0.0.1])
+	by helium.he.net
+	for <jmoore@netazoic.com>; Sat, 30 Jul 2022 16:22:50 -0700
+To: fbr.mailadmin@mm2.freeburmarangers.org
+Subject: Mailing list subscription for ccb_genrl
+Date: Sat, 30 Jul 2022 23:22:50 +0000
+From: FBR Mailing List Subscription <mailadmin@freeburmarangers.org>
+Message-ID: <sz3u0UZ89mhVBu9KXw6XKOVqeY9g5G3XglleiDPIoQM@fto.org>
+X-Mailer: PHPMailer 6.6.0 (https://github.com/PHPMailer/PHPMailer)
+MIME-Version: 1.0
+Content-Type: text/html; charset=UTF-8
+X-Antivirus: Avast (VPS 220730-4, 7/30/2022), Inbound message
+X-Antivirus-Status: Clean
+
+approve ccb.passwd subscribe ccb_genrl test1@netazoic.com

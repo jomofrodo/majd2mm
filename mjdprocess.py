@@ -38,7 +38,7 @@ flgDebug = 0;
 
 #************* SET THESE VALUES **************
 MM_BIN = "/usr/lib/mailman/bin";
-MEMBERS_FILE = "./members.txt";
+MEMBERS_FILE = "/etc/mailman/members.txt";
 LIST = "ccb_genrl";
 LOG_FILE = "/var/log/majd2mm.log";
 TEST_FILE = "./test/test.forward.txt"
@@ -53,11 +53,20 @@ def on_connect(client,userData,flags, rc):
     msg = ("Connected to MQTT with ResultCode %s"% rc)
     writeLog(LOG_FILE,msg)
 
+def on_message(client,userdata,message):
+    msg = ("Message received: " + message.payload.decode())
+    writeLog(LOG_FILE,msg)
+
 
 def writeLog(logfile, logtext):
 # write anything out to a log file
     logTime = datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")
-    logtext = logtext.rstrip()
+
+    if logtext and not logtext.isspace():
+    	logtext = logtext.rstrip()
+    else:
+       logtext = ""
+
     # makesure logtext always ends with a newline
     logtext += "\n";  
     logtext = logTime + " " + logtext;
@@ -75,18 +84,20 @@ def writeMembers(email):
 
 client = mqtt.Client();
 client.on_connect = on_connect
+client.on_message = on_message
 client.connect(broker_url, broker_port)
 
 def on_subscribe(client,userData,message):
     rec = json.loads(message.payload);
     email = rec['email']
     listName = rec['listName']
+    writeMembers(email);
     # just run the add_members command
     cmd = " %s/add_members -r %s " %(MM_BIN,MEMBERS_FILE);
     cmd += " --welcome-msg=yes --admin-notify=no ";
     cmd += listName 
     args = shlex.split(cmd)
-    writeLog(LOG_FILE, args);
+    # writeLog(LOG_FILE, args);
     ret = ""
     try:
             ret = subprocess.check_output(cmd, shell=True)
@@ -134,8 +145,8 @@ def on_unsubscribe(client,userData,message):
     
 ### MQTT subscriptions
 
-client.subscribe("SubscribeList")
-client.subscribe("UnsubList")
+client.subscribe("SubscribeList",qos=2)
+client.subscribe("UnsubList", qos=2)
 client.message_callback_add("SubscribeList", on_subscribe)
 client.message_callback_add("UnsubList", on_unsubscribe)
 
